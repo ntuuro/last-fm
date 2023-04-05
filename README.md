@@ -51,7 +51,6 @@ cd last-fm-web
 # or
 > yarn or yarn install
 
-> npm run dev
 ```
 
 ```bash
