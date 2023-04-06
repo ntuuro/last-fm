@@ -67,7 +67,7 @@ npm run dev
 For tests, please follow the instructions on the following link
 ```
 
-> Open [https://pusher.com/blog/tests-laravel-applications/#writing-our-test-cases](Tests)
+> Open [https://pusher.com/blog/tests-laravel-applications/#writing-our-test-cases](https://pusher.com/blog/tests-laravel-applications/#writing-our-test-cases)
 
 ## Contributors
 
