@@ -33,14 +33,14 @@ cd lastfmapi
     LAST_FM_USER={your_fm_user}
 ```
 
-### 3. Run docker compose
+### 4. Run docker compose
 
 > run docker compose up
 > inside a container run `php artisan key:generate && php artisan migrate `
 
 > Open [http://localhost](http://localhost)
 
-### 4. Web
+### 5. Web
 
 ```
 cd last-fm-web
@@ -61,7 +61,7 @@ npm run dev
 
 > Open [http://localhost:3000](http://localhost:3000)
 
-### 5. Tests
+### 6. Tests
 
 ```bash
 For tests, please follow the instructions on the following link
