@@ -61,6 +61,14 @@ npm run dev
 
 > Open [http://localhost:3000](http://localhost:3000)
 
+### 5. Tests
+
+```bash
+For tests, please follow the instructions on the following link
+```
+
+> Open [https://pusher.com/blog/tests-laravel-applications/#writing-our-test-cases](Tests)
+
 ## Contributors
 
 - Elie K. Gashagaza <elie.gash42@gmail.com>
