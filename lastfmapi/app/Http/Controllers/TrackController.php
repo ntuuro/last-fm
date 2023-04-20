@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Track;
-use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 
 class TrackController extends Controller
@@ -11,13 +9,14 @@ class TrackController extends Controller
     // a class with a public property $client and a constructor method __construct().
     public $client;
 
-    public function __construct(){
+    public function __construct()
+    {
 
-    // The constructor initializes the $client property with a new instance of the GuzzleHttp\Client class, which is a popular HTTP client for PHP.
-    $this->client =new Client([
-        // Base URI is used with relative requests
-        'base_uri' => env('LAST_FM_BASE_URL')
-    ]);
+        // The constructor initializes the $client property with a new instance of the GuzzleHttp\Client class, which is a popular HTTP client for PHP.
+        $this->client = new Client([
+            // Base URI is used with relative requests
+            'base_uri' => config('lastfm.last_base_url')
+        ]);
     }
 
     /**
@@ -29,20 +28,20 @@ class TrackController extends Controller
         // An array of promises is created, with each promise representing a request to the Last.fm API.
         $promise = [
             // Get information about the track.
-            $this->client->getAsync('?method=track.getInfo&api_key='. env('LAST_FM_API_KEY').'&artist='.$artist.'&track='.$name.'&format=json'),
+            $this->client->getAsync('?method=track.getInfo&api_key=' . config('lastfm.last_api_key') . '&artist=' . $artist . '&track=' . $name . '&format=json'),
             // Get similar artists to the given artist.
-            $this->client->getAsync('?method=artist.getSimilar&api_key='. env('LAST_FM_API_KEY').'&artist='.$artist.'&format=json&limit=6'),
+            $this->client->getAsync('?method=artist.getSimilar&api_key=' . config('lastfm.last_api_key') . '&artist=' . $artist . '&format=json&limit=6'),
             // Get similar tracks to the given track.
-            $this->client->getAsync('?method=track.getSimilar&api_key='. env('LAST_FM_API_KEY').'&artist='.$artist.'&track='.$name.'&format=json&limit=10'),
+            $this->client->getAsync('?method=track.getSimilar&api_key=' . config('lastfm.last_api_key') . '&artist=' . $artist . '&track=' . $name . '&format=json&limit=10'),
             // Get the top albums of the given artist.
-            $this->client->getAsync('?method=artist.getTopAlbums&api_key='. env('LAST_FM_API_KEY').'&artist='.$artist.'&format=json&limit=6'),
+            $this->client->getAsync('?method=artist.getTopAlbums&api_key=' . config('lastfm.last_api_key') . '&artist=' . $artist . '&format=json&limit=6'),
         ];
-        
+
         // The GuzzleHttp Promise library is used to resolve all promises asynchronously.
         $response = \GuzzleHttp\Promise\Utils::settle(
             \GuzzleHttp\Promise\Utils::unwrap($promise),
         )->wait();
-        
+
         // The response for each promise is retrieved and decoded from JSON to an array.
         $track = json_decode($response[0]['value']->getBody()->getContents(), true);
         $similar_artists = json_decode($response[1]['value']->getBody()->getContents(), true);
@@ -54,20 +53,20 @@ class TrackController extends Controller
             return response()->json(['success' => false, 'message' => 'Track does not exist']);
         }
 
-         // The function returns a JSON response with a success message and the retrieved data.
+        // The function returns a JSON response with a success message and the retrieved data.
         return response()->json(['success' => true, 'payload' => [$track, $similar_artists, $similar_tracks, $artist_top_albums]]);
     }
 
     public function search($name)
     {
         $promise = [
-            $this->client->getAsync('?method=track.search&api_key='. env('LAST_FM_API_KEY').'&track='.$name.'&format=json'),
+            $this->client->getAsync('?method=track.search&api_key=' . config('lastfm.last_api_key') . '&track=' . $name . '&format=json'),
         ];
-        
+
         $response = \GuzzleHttp\Promise\Utils::settle(
             \GuzzleHttp\Promise\Utils::unwrap($promise),
         )->wait();
-        
+
         $tracks = json_decode($response[0]['value']->getBody()->getContents(), true);
         if (!$tracks) {
             return response()->json(['success' => false, 'message' => 'Track does not exist']);

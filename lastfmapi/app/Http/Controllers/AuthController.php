@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\JsonResponse;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -17,7 +15,7 @@ class AuthController extends Controller
     Redirect to Google's authentication page using Socialite.
 
     @return JsonResponse A JSON response containing the URL to the authentication page.
-    */
+     */
     public function redirectToAuth(): JsonResponse
     {
         // Use Socialite to generate the URL for Google's authentication page and get the target URL.
@@ -25,9 +23,9 @@ class AuthController extends Controller
         // Return a JSON response containing the URL to the authentication page.
         return response()->json([
             'url' => Socialite::driver('google')
-                         ->stateless()
-                         ->redirect()
-                         ->getTargetUrl(),
+                ->stateless()
+                ->redirect()
+                ->getTargetUrl(),
         ]);
     }
 
@@ -39,10 +37,10 @@ class AuthController extends Controller
     public function handleAuthCallback(): JsonResponse
     {
         try {
-             /** @var SocialiteUser $socialiteUser */
+            /** @var SocialiteUser $socialiteUser */
             $socialiteUser = Socialite::driver('google')
-                                ->stateless()
-                                ->user();
+                ->stateless()
+                ->user();
         } catch (ClientException $e) {
             // Return error response for invalid credentials
             return response()->json(['error' => 'Invalid credentials provided.'], 422);
@@ -79,10 +77,11 @@ class AuthController extends Controller
     Logout the user and revoke all access tokens.
 
     @return JsonResponse
-    */
-    public function logout() {
+     */
+    public function logout()
+    {
         // Get all access tokens of the authenticated user and delete them.
-        Auth::user()->tokens->each(function($token) {
+        Auth::user()->tokens->each(function ($token) {
             $token->delete();
         });
         // Return response with message of logging out successfully
